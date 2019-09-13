@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "861845422917",
+    "firebase_url": "https://to-do-innerhour.firebaseio.com",
+    "project_id": "to-do-innerhour",
+    "storage_bucket": "to-do-innerhour.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:861845422917:android:cf6f76f7731be5cc4e342c",
+        "android_client_info": {
+          "package_name": "com.ritesh.innerhourtodo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "861845422917-8n97om829nmmsc801mc8nh1ja9pcu73u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ritesh.innerhourtodo",
+            "certificate_hash": "635bab738ae1e847412a2a80a808c7fd9faa1632"
+          }
+        },
+        {
+          "client_id": "861845422917-gshv9ntpinu82c84pv4tbd514b1pe0vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4uuQ1Vh3MPHenRrWoz_fB0EsoaVjD3m8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "861845422917-gshv9ntpinu82c84pv4tbd514b1pe0vj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
