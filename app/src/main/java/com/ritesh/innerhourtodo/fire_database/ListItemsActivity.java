@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class ListItemsActivity extends AppCompatActivity {
 
     private final String TAG = "ListItemsActivity";

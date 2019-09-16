@@ -19,10 +19,6 @@ import com.ritesh.innerhourtodo.fire_database.ListItemsActivity;
 
 import static androidx.legacy.content.WakefulBroadcastReceiver.startWakefulService;
 
-/**
- * Created by sonu on 09/04/17.
- */
-
 public class AlarmReceiver extends BroadcastReceiver {
 
     public static int ALARM_TYPE_RTC = 100;
@@ -39,18 +35,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         String strDesc = intent.getExtras().getString("DESC", "");
 
         notifyNotifi(context, strTitle, strDesc);
-
-        //Stop sound service to play sound for alarm
-//        Intent alrIntent = new Intent();
-//        alrIntent.putExtra("TITLE", strTitle);
-//        alrIntent.putExtra("DESC", strDesc);
-//
-//        context.startService(new Intent(context, AlarmSoundService.class));
-
-        //This will send a notification message and show notification in notification tray
-//        ComponentName comp = new ComponentName(context.getPackageName(),
-//                AlarmNotificationService.class.getName());
-//        startWakefulService(context, (intent.setComponent(comp)));
 
     }
 
