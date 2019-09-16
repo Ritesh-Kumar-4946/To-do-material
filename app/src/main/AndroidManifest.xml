@@ -24,22 +24,6 @@
         android:theme="@style/CustomStyle.DarkTheme">
 
         <activity
-            android:name=".fire_database.ListItemsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!--<activity
-            android:name=".BaseActivity.ListItemsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />-->
-
-        <!-- androidtutorialpoint for showing how to store data to firebase and retrive(End)-->
-
-
-        <!-- Android Hive -> how to login, signup, change email, changepassword, send change password email, remove A/C with firebase (Start)-->
-        <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -49,16 +33,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".fire_database.ListItemsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".SignupActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".ResetPasswordActivity"
             android:label="@string/title_activity_reset_password"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".fire_database.AddReminderActivity"
             android:screenOrientation="portrait"
@@ -71,25 +64,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-<!--        <receiver android:name=".notification.AlarmReceiver" />-->
-<!--        <receiver-->
-<!--            android:name=".notification.AlarmBootReceiver"-->
-<!--            android:enabled="false">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.BOOT_COMPLETED"></action>-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
-
-        <!--  Declare  Alarm Broadcast receiver here  -->
         <receiver android:name=".alarmServices.AlarmReceiver" />
 
-        <!--  Declare  Alarm Notification Service here  -->
-<!--        <service android:name=".alarmServices.AlarmNotificationService" />-->
-
-        <!--  Declare  Alarm Sound Service here  -->
-<!--        <service android:name=".alarmServices.AlarmSoundService" />-->
-
-        <!-- Android Hive -> how to login, signup, change email, changepassword, send change password email, remove A/C with firebase (End)-->
 
     </application>
 
