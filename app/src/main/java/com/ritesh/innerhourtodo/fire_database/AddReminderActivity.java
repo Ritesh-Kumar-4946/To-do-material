@@ -21,7 +21,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.ritesh.innerhourtodo.R;
-import com.ritesh.innerhourtodo.todo_main.AddToDo.AddToDoActivity;
+//import com.ritesh.innerhourtodo.todo_main.AddToDo.AddToDoActivity;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -406,7 +406,7 @@ public class AddReminderActivity extends AppCompatActivity implements DatePicker
 
 
     private void makeResult(int result) {
-        Log.e("AddToDoActivity", "makeResult - ok : in");
+//        Log.e("AddToDoActivity", "makeResult - ok : in");
 
         Bundle bReminder = new Bundle();
         if (edt_todo_title.getText().toString().length() > 0) {

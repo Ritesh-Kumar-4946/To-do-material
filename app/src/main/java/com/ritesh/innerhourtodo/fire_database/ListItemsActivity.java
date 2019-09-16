@@ -1,5 +1,8 @@
 package com.ritesh.innerhourtodo.fire_database;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -37,10 +40,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ritesh.innerhourtodo.LoginActivity;
 import com.ritesh.innerhourtodo.R;
-import com.ritesh.innerhourtodo.notification.NotificationHelper;
+import com.ritesh.innerhourtodo.alarmServices.AlarmReceiver;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -57,6 +62,9 @@ public class ListItemsActivity extends AppCompatActivity {
     private ArrayList<ReminderItems_Model> reminderList;
     Date mUserReminderDate;
     private String reminderId;
+    private PendingIntent pendingIntent;
+    //Alarm Request Code
+    private static final int ALARM_REQUEST_CODE = 133;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -303,7 +311,9 @@ public class ListItemsActivity extends AppCompatActivity {
 //        FirebaseDatabase.getInstance().getReference().updateChildren(mapChildUpdate);
 
         mListItemRef.child(reminderId).setValue(reminderItems_model);
-        printDifference(new Date(), mUserReminderDate, strSet_title, strSet_description);
+//        printDifference(new Date(), mUserReminderDate, strSet_title, strSet_description);
+        triggerAlarmManager(differTime(mUserReminderDate), strSet_title, strSet_description);
+//        differTime(mUserReminderDate);
 
     }
 
@@ -398,36 +408,37 @@ public class ListItemsActivity extends AppCompatActivity {
     //1 minute = 60 seconds
     //1 hour = 60 x 60 = 3600
     //1 day = 3600 x 24 = 86400
-    public void printDifference(Date startDate, Date endDate, String strTitle, String strDesc) {
-        //milliseconds
-        long different = endDate.getTime() - startDate.getTime();
-
-//        Log.e("startDate", "-> " + startDate);
-//        Log.e("endDate", "->" + endDate);
-//        Log.e("different", "->" + different);
-
-        long secondsInMilli = 1000;
-        long minutesInMilli = secondsInMilli * 60;
-        long hoursInMilli = minutesInMilli * 60;
-        long daysInMilli = hoursInMilli * 24;
-
-        long elapsedDays = different / daysInMilli;
-        different = different % daysInMilli;
-
-        long elapsedHours = different / hoursInMilli;
-        different = different % hoursInMilli;
-
-        long elapsedMinutes = different / minutesInMilli;
-        different = different % minutesInMilli;
-
-        long elapsedSeconds = different / secondsInMilli;
-        Log.e("FinalDiff", "-> "
-                + elapsedDays + "days  " + elapsedHours + "hours  " + elapsedMinutes + "minutes  " + elapsedSeconds + "seconds");
-
-        NotificationHelper.scheduleRepeatingRTCNotification(this, String.valueOf(elapsedHours), String.valueOf(elapsedMinutes), strTitle, strDesc);
-        NotificationHelper.enableBootReceiver(this);
-
-    }
+//    public void printDifference(Date startDate, Date endDate, String strTitle, String strDesc) {
+//        //milliseconds
+//        long different = endDate.getTime() - startDate.getTime();
+//
+////        Log.e("startDate", "-> " + startDate);
+////        Log.e("endDate", "->" + endDate);
+////        Log.e("different", "->" + different);
+//
+//        long secondsInMilli = 1000;
+//        long minutesInMilli = secondsInMilli * 60;
+//        long hoursInMilli = minutesInMilli * 60;
+//        long daysInMilli = hoursInMilli * 24;
+//
+//        long elapsedDays = different / daysInMilli;
+//        different = different % daysInMilli;
+//
+//        long elapsedHours = different / hoursInMilli;
+//        different = different % hoursInMilli;
+//
+//        long elapsedMinutes = different / minutesInMilli;
+//        different = different % minutesInMilli;
+//
+//        long elapsedSeconds = different / secondsInMilli;
+//        Log.e("FinalDiff", "-> "
+//                + elapsedDays + "days  " + elapsedHours + "hours  " + elapsedMinutes + "minutes  " + elapsedSeconds + "seconds");
+//
+//        NotificationHelper.scheduleRepeatingRTCNotification(this, String.valueOf(elapsedHours), String.valueOf(elapsedMinutes), strTitle, strDesc);
+//        NotificationHelper.enableBootReceiver(this);
+//
+//
+//    }
 
 
     public void createNewListItem(ReminderItems_Model itemsModel) {
@@ -443,7 +454,6 @@ public class ListItemsActivity extends AppCompatActivity {
 
 //        reminderId = mListItemRef.push().getKey();
 //        reminderId = mListItemRef.getDatabase().getReference().getKey();
-
 
 
         // set dialog message
@@ -480,5 +490,47 @@ public class ListItemsActivity extends AppCompatActivity {
                 .show();
 
     }
+
+    //Trigger alarm manager with entered time interval
+    public void triggerAlarmManager(int alarmTriggerTime, String strTitle, String strDesc) {
+        /* Retrieve a PendingIntent that will perform a broadcast */
+        Intent alarmIntent = new Intent(ListItemsActivity.this, AlarmReceiver.class);
+        alarmIntent.putExtra("TITLE", strTitle);
+        alarmIntent.putExtra("DESC", strDesc);
+        pendingIntent = PendingIntent.getBroadcast(ListItemsActivity.this, ALARM_REQUEST_CODE, alarmIntent, 0);
+        // get a Calendar object with current time
+        Calendar cal = Calendar.getInstance();
+        // add alarmTriggerTime seconds to the calendar object
+        cal.add(Calendar.SECOND, alarmTriggerTime);
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);//get instance of alarm manager
+        manager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);//set alarm manager with entered timer by converting into milliseconds
+//        Toast.makeText(this, "Alarm Set for " + alarmTriggerTime + " seconds.", Toast.LENGTH_SHORT).show();
+    }
+
+    private int differTime(Date futureDate) {
+//        https://stackoverflow.com/questions/10690370/how-do-i-get-difference-between-two-dates-in-android-tried-every-thing-and-pos/24279153
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.format(new Date());
+        String strfuture_time = simpleDateFormat.format(futureDate);
+        Log.e("strDate_time", "-> " + strfuture_time);
+
+        Date currentDate = new Date();
+        long diffn = futureDate.getTime() - currentDate.getTime();
+        long seconds = diffn / 1000;
+        Log.e("Difference: ", " seconds: " + seconds);
+//                    + " hours: " + hours + " days: " + days);
+//        long minutes = seconds / 60;
+//        long hours = minutes / 60;
+//        long days = hours / 24;
+
+//        if (currentDate.before(futureDate)) {
+//            Log.e("oldDate", "is previous date");
+//            Log.e("Difference: ", " seconds: " + seconds + " minutes: " + minutes
+//                    + " hours: " + hours + " days: " + days);
+//        }
+        return (int) seconds;
+    }
+
 
 }
