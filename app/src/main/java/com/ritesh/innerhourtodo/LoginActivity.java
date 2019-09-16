@@ -3,7 +3,9 @@ package com.ritesh.innerhourtodo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -11,12 +13,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.ritesh.innerhourtodo.fire_database.ListItemsActivity;
+
+import static com.ritesh.innerhourtodo.utility.Utility.showLog;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
@@ -24,15 +28,20 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.e("LoginActivity", "OK");
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            showLog(TAG, "getCurrentUser_Email -> " + String.valueOf(auth.getCurrentUser().getEmail()));
+//            startActivity(new Intent(LoginActivity.this, ListItemsActivity.class));
+            startActivity(new Intent(LoginActivity.this, ListItemsActivity.class));
             finish();
         }
 
@@ -101,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(LoginActivity.this, ListItemsActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -109,5 +118,20 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+
+
+    private static boolean isEmailValid(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private static boolean isPasswordValid(String password) {
+        return (password.length() >= 6);
+    }
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 }
